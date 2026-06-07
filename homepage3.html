@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Manager | Smart Donation Tracking System</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ========== RESET & BASE STYLES ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --dark: #2d4059;
+            --light: #f7fff7;
+            --gray: #6c757d;
+            --gradient1: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            overflow-x: hidden;
+            background-color: var(--light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ========== NAVIGATION ========== */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 20px rgba(255, 107, 107, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--secondary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            color: var(--primary);
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient1);
+        }
+
+        .contact-btn {
+            background: var(--gradient1);
+            color: white !important;
+            padding: 10px 20px !important;
+            border-radius: 50px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* User Menu for Logged In Users */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            z-index: 1;
+            margin-top: 10px;
+        }
+
+        .dropdown-content a {
+            color: var(--dark);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background: #f5f5f5;
+            color: var(--primary);
+        }
+
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            background: linear-gradient(135deg, #fff5f5 0%, #e6f7f5 100%);
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 60%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(78, 205, 196, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -10%;
+            left: -5%;
+            width: 40%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .highlight {
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient1);
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gradient1);
+            color: white;
+            border-color: transparent;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* ========== FLOATING PRODUCT MOCKUP ========== */
+        .hero-visual {
+            position: relative;
+            height: 450px;
+            perspective: 1200px;
+        }
+
+        .floating-scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: sceneFloat 8s ease-in-out infinite;
+        }
+
+        @keyframes sceneFloat {
+            0%, 100% { transform: translateY(0) rotateX(0deg); }
+            50% { transform: translateY(-15px) rotateX(2deg); }
+        }
+
+        .float-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 28px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .float-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 35px 55px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-1 {
+            top: 5%;
+            left: -5%;
+            width: 160px;
+            height: 160px;
+            padding: 20px;
+            animation: card1Float 6s ease-in-out infinite;
+        }
+
+        @keyframes card1Float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        .donut-chart {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .donut-ring {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0deg 200deg, var(--secondary) 200deg 360deg);
+            position: relative;
+        }
+
+        .donut-ring::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .donut-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .card-2 {
+            top: 15%;
+            right: -10%;
+            width: 180px;
+            padding: 20px;
+            animation: card2Float 7s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes card2Float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-8px) translateX(5px); }
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .grid-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ff6b6b15 0%, #4ecdc415 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grid-icon i {
+            font-size: 1.2rem;
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-3 {
+            bottom: 15%;
+            left: -2%;
+            width: 200px;
+            padding: 18px;
+            animation: card3Float 6.5s ease-in-out infinite 1s;
+        }
+
+        @keyframes card3Float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-12px) rotate(0deg); }
+        }
+
+        .mini-bars {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            justify-content: center;
+            height: 70px;
+        }
+
+        .mini-bar {
+            width: 22px;
+            background: linear-gradient(180deg, var(--secondary) 0%, var(--primary) 100%);
+            border-radius: 6px;
+        }
+
+        .card-4 {
+            bottom: 20%;
+            right: -8%;
+            width: 170px;
+            padding: 18px;
+            animation: card4Float 7.5s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes card4Float {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-10px) rotate(0deg); }
+        }
+
+        .donation-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preview-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-avatar {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+        }
+
+        .preview-line {
+            flex: 1;
+            height: 7px;
+            background: linear-gradient(90deg, #e0e0e0 0%, #f0f0f0 50%, #e0e0e0 100%);
+            border-radius: 4px;
+        }
+
+        .preview-line.small {
+            width: 40px;
+            flex: none;
+        }
+
+        .glow-1 {
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(78, 205, 196, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+            animation: glowPulse 4s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        .glow-2 {
+            position: absolute;
+            bottom: 10%;
+            left: 5%;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(255, 107, 107, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+            animation: glowPulse 5s ease-in-out infinite 1s;
+            z-index: 0;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--secondary);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: particleFloat 8s ease-in-out infinite;
+        }
+
+        .particle:nth-child(1) { top: 15%; left: 25%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 55%; right: 25%; width: 5px; height: 5px; background: var(--primary); animation-delay: 1s; }
+        .particle:nth-child(3) { bottom: 35%; left: 35%; animation-delay: 2s; }
+        .particle:nth-child(4) { top: 45%; right: 35%; width: 4px; height: 4px; animation-delay: 0.5s; }
+        .particle:nth-child(5) { bottom: 20%; right: 20%; width: 4px; height: 4px; background: var(--accent); animation-delay: 1.5s; }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
+            50% { transform: translateY(-20px) translateX(10px); opacity: 0.6; }
+        }
+
+        /* ========== AUTH MODAL ========== */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .auth-modal-content {
+            background-color: white;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 450px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s ease;
+            overflow: hidden;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .auth-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: var(--gray);
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1002;
+        }
+
+        .auth-modal-close:hover {
+            color: var(--primary);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h3 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            color: var(--gray);
+        }
+
+        .auth-header p a {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-toggle {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #f0f0f0;
+            padding: 5px;
+            border-radius: 50px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            color: var(--gray);
+        }
+
+        .toggle-btn.active {
+            background: var(--gradient1);
+            color: white;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .social-login {
+            text-align: center;
+        }
+
+        .social-login p {
+            color: var(--gray);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .social-btn:hover {
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* ========== FEATURES SECTION ========== */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+            border-bottom: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.15);
+            border-bottom-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+        }
+
+        /* ========== HOW IT WORKS ========== */
+        .how-it-works {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #fff5f5 0%, #f0fff7 100%);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .step {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.1);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient1);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .step p {
+            color: var(--gray);
+        }
+
+        /* ========== LIVE PREVIEW ========== */
+        .live-preview {
+            padding: 80px 0;
+            background: var(--gradient1);
+            color: white;
+        }
+
+        .live-preview .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .preview-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .preview-content p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .demo-form {
+            background: rgba(255,255,255,0.2);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .demo-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .demo-input-group input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .demo-input-group input:focus {
+            outline: 2px solid var(--accent);
+        }
+
+        .btn-demo {
+            padding: 12px 25px;
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-demo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: white;
+        }
+
+        .demo-note {
+            font-size: 0.9rem !important;
+            margin-bottom: 0 !important;
+            opacity: 0.8;
+        }
+
+        .preview-image img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 5px solid rgba(255,255,255,0.3);
+        }
+
+        /* ========== TESTIMONIALS ========== */
+        .testimonials {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: linear-gradient(135deg, #fff5f5 0%, #f0fff7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.15);
+        }
+
+        .testimonial-content i {
+            color: var(--secondary);
+            font-size: 2rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+            display: block;
+        }
+
+        .testimonial-content p {
+            font-style: italic;
+            color: var(--dark);
+            margin-bottom: 20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(78, 205, 196, 0.2);
+        }
+
+        .testimonial-author img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
+        .author-info h4 {
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        /* ========== CALL TO ACTION ========== */
+        .cta {
+            padding: 80px 0;
+            background: var(--gradient1);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-large {
+            padding: 18px 45px;
+            font-size: 1.2rem;
+            background: white;
+            color: var(--primary);
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-large:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 255, 255, 0.3);
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .footer-logo i {
+            color: var(--secondary);
+        }
+
+        .footer-section p {
+            color: #a0a0a0;
+            line-height: 1.8;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #a0a0a0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--secondary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--gradient1);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #a0a0a0;
+        }
+
+        .footer-bottom i {
+            color: var(--primary);
+        }
+
+        @media (max-width: 968px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 60px;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+                margin: 0 auto;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-visual {
+                height: 400px;
+            }
+
+            .card-1, .card-2, .card-3, .card-4 {
+                transform: scale(0.8);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .demo-input-group {
+                flex-direction: column;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .hero-visual {
+                height: 350px;
+            }
+
+            .card-1, .card-2, .card-3, .card-4 {
+                transform: scale(0.7);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-hand-holding-heart"></i>
+                <span>DonationManager</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><button class="contact-btn" onclick="openAuthModal()">Get Started</button></li>
+            </ul>
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Manage Donations <span class="highlight">Easily & Efficiently</span></h1>
+                <p class="hero-subtitle">Track, manage, and analyze all your donations in one place. Simple, secure, and smart donation management system for organizations and individuals.</p>
+                
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="openAuthModal()">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-play"></i> Watch Demo
+                    </button>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="10000">0</span>
+                        <span class="stat-label">Donations</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="500">0</span>
+                        <span class="stat-label">Organizations</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="2000000">0</span>
+                        <span class="stat-label">Collected ($)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FLOATING PRODUCT MOCKUP -->
+            <div class="hero-visual">
+                <div class="glow-1"></div>
+                <div class="glow-2"></div>
+                
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                
+                <div class="floating-scene">
+                    <div class="float-card card-1">
+                        <div class="donut-chart">
+                            <div class="donut-ring"></div>
+                            <i class="fas fa-chart-pie donut-icon"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="float-card card-2">
+                        <div class="icon-grid">
+                            <div class="grid-icon"><i class="fas fa-heart"></i></div>
+                            <div class="grid-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="grid-icon"><i class="fas fa-users"></i></div>
+                            <div class="grid-icon"><i class="fas fa-coins"></i></div>
+                        </div>
+                    </div>
+                    
+                    <div class="float-card card-3">
+                        <div class="mini-bars">
+                            <div class="mini-bar" style="height: 35px;"></div>
+                            <div class="mini-bar" style="height: 55px;"></div>
+                            <div class="mini-bar" style="height: 30px;"></div>
+                            <div class="mini-bar" style="height: 65px;"></div>
+                            <div class="mini-bar" style="height: 40px;"></div>
+                            <div class="mini-bar" style="height: 50px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="float-card card-4">
+                        <div class="donation-preview">
+                            <div class="preview-row">
+                                <div class="preview-avatar"></div>
+                                <div class="preview-line"></div>
+                                <div class="preview-line small"></div>
+                            </div>
+                            <div class="preview-row">
+                                <div class="preview-avatar"></div>
+                                <div class="preview-line"></div>
+                                <div class="preview-line small"></div>
+                            </div>
+                            <div class="preview-row">
+                                <div class="preview-avatar"></div>
+                                <div class="preview-line"></div>
+                                <div class="preview-line small"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Our Donation Manager?</h2>
+                <p>Powerful features to help you manage donations effectively</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>Easy Data Entry</h3>
+                    <p>Simple form to add donations with name, amount, and date. Quick and intuitive interface.</p>
+                    <a href="data entry.html" target="_blank" class="btn btn-primary">Open Entries</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <h3>Organized Tables</h3>
+                    <p>View all donations in a clean, sortable table format. Easy to scan and manage.</p>
+                    <a href="table3.html" target="_blank" class="btn btn-primary">Open Tables</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Real-time Calculations</h3>
+                    <p>Automatic total calculation, averages, and statistics using JavaScript objects.</p>
+                    <a href="calculations.html" target="_blank" class="btn btn-primary">Open Calculations</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Smart Search</h3>
+                    <p>Quickly find donations by donor name, date range, or amount with instant filtering.</p>
+                    <a href="smartsearch.html" target="_blank" class="btn btn-primary">Open Search</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Data Persistence</h3>
+                    <p>Your data stays safe with local storage. Never lose your donation records.</p>
+                    <a href="persistence3.html" target="_blank" class="btn btn-primary">Open Persistence</a>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Analytics</h3>
+                    <p>Get insights with donation trends, highest donations, and monthly summaries.</p>
+                    <a href="analytics1.html" target="_blank" class="btn btn-primary">Open Analytics</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p>Three simple steps to start managing donations</p>
+            </div>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3>Fill the Form</h3>
+                    <p>Enter donor details, donation amount, and date in the simple form.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-save"></i>
+                    </div>
+                    <h3>Save as Object</h3>
+                    <p>Data is stored as JavaScript objects in an organized array.</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>View & Analyze</h3>
+                    <p>See all donations in table format with automatic calculations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE PREVIEW SECTION -->
+    <section class="live-preview">
+        <div class="container">
+            <div class="preview-content">
+                <h2>Try It Now</h2>
+                <p>See how easy it is to add and manage donations</p>
+                
+                <div class="demo-form">
+                    <div class="demo-input-group">
+                        <input type="text" placeholder="Donor Name" id="demoName">
+                        <input type="number" placeholder="Amount" id="demoAmount">
+                        <button onclick="showDemoAlert()" class="btn-demo">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                    <p class="demo-note"><i class="fas fa-info-circle"></i> This is a demo - Sign up to use the full app!</p>
+                </div>
+            </div>
+            <div class="preview-image">
+                <img src="https://cdn.pixabay.com/photo/2016/11/14/03/26/charity-1822487_1280.jpg" 
+                     alt="Donation box and hands"
+                     onerror="this.src='https://via.placeholder.com/400x300?text=Donation+Preview'">
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>What Our Users Say</h2>
+                <p>Trusted by organizations worldwide</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"This donation management system has transformed how we track our fundraising. So simple yet powerful!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Sarah Johnson">
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>Non-profit Director</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"The table view and automatic calculations save me hours of manual work. Highly recommended!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>Charity Organizer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <i class="fas fa-quote-left"></i>
+                        <p>"Finally a tool that understands donation management. The object-based storage is genius!"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Emily Rodriguez">
+                        <div class="author-info">
+                            <h4>Emily Rodriguez</h4>
+                            <p>Fundraising Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Start Managing Donations?</h2>
+            <p>Join thousands of organizations using our donation management system</p>
+            <button class="btn-large" onclick="openAuthModal()">
+                <i class="fas fa-arrow-right"></i> Launch Dashboard
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <span>DonationManager</span>
+                    </div>
+                    <p>Making donation management simple and efficient for everyone. Track, analyze, and grow your impact.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Connect With Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 DonationManager. All rights reserved. | Made with <i class="fas fa-heart"></i> for better giving</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-modal-content">
+            <span class="auth-modal-close" onclick="closeAuthModal()">&times;</span>
+            
+            <div style="padding: 40px;">
+                <div class="auth-header">
+                    <h3>Welcome Back</h3>
+                    <p>Sign in to your account</p>
+                </div>
+
+                <div class="auth-toggle">
+                    <button class="toggle-btn active" onclick="showAuthForm('signin')">Sign In</button>
+                    <button class="toggle-btn" onclick="showAuthForm('signup')">Sign Up</button>
+                </div>
+
+                <div id="signinForm" class="auth-form active">
+                    <form onsubmit="handleSignIn(event)">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="signinEmail" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="signinPassword" placeholder="Enter your password" required>
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('signinPassword')"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" id="rememberMe"> Remember me
+                            </label>
+                            <a class="forgot-link" onclick="showForgotPassword()">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Sign In</button>
+
+                        <div class="social-login">
+                            <p>Or continue with</p>
+                            <div class="social-buttons">
+                                <button type="button" class="social-btn" onclick="socialLogin('google')">
+                                    <i class="fab fa-google"></i> Google
+                                </button>
+                                <button type="button" class="social-btn" onclick="socialLogin('facebook')">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="signupForm" class="auth-form">
+                    <form onsubmit="handleSignUp(event)">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" id="signupName" placeholder="Enter your full name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="signupPassword" placeholder="Create a password" required>
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('signupPassword')"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('signupConfirmPassword')"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="remember-me">
+                                <input type="checkbox" id="termsCheckbox"> I agree to the Terms
+                            </label>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Create Account</button>
+
+                        <div class="social-login">
+                            <p>Or sign up with</p>
+                            <div class="social-buttons">
+                                <button type="button" class="social-btn" onclick="socialLogin('google')">
+                                    <i class="fab fa-google"></i> Google
+                                </button>
+                                <button type="button" class="social-btn" onclick="socialLogin('facebook')">
+                                    <i class="fab fa-facebook-f"></i> Facebook
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="forgotForm" class="auth-form">
+                    <form onsubmit="handleForgotPassword(event)">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Reset Link</button>
+                        <div style="text-align: center; margin-top: 15px;">
+                            <a onclick="showAuthForm('signin')" style="color: var(--primary); cursor: pointer;">Back to Sign In</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    document.querySelector('.nav-menu').classList.remove('active');
+                }
+            });
+        });
+
+        // Demo alert
+        function showDemoAlert() {
+            let name = document.getElementById('demoName').value;
+            let amount = document.getElementById('demoAmount').value;
+            
+            if (name && amount) {
+                alert(`✨ Great! In the full app, this would add a donation of $${amount} from ${name}. Sign up to try the complete version!`);
+                openAuthModal();
+            } else {
+                alert('👋 Please enter both a name and amount to see how the form works!');
+            }
+        }
+
+        // Stats Counter Animation
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        if (target >= 1000000) stat.innerText = '$2M+';
+                        else if (target >= 10000) stat.innerText = '10K+';
+                        else if (target >= 500) stat.innerText = '500+';
+                        else stat.innerText = target + '+';
+                        clearInterval(timer);
+                    } else {
+                        stat.innerText = Math.floor(current) + '+';
+                    }
+                }, 20);
+            });
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        const statsContainer = document.querySelector('.hero-stats');
+        if (statsContainer) observer.observe(statsContainer);
+
+        // Image fallback
+        document.querySelectorAll('img').forEach(img => {
+            img.onerror = function() {
+                this.src = 'https://via.placeholder.com/500x400?text=Donation+Management';
+            };
+        });
+
+        // ========== AUTHENTICATION SYSTEM ==========
+        const USER_DB_KEY = 'donationManager_users';
+        const CURRENT_USER_KEY = 'donationManager_currentUser';
+
+        function initUserDB() {
+            if (!localStorage.getItem(USER_DB_KEY)) {
+                const defaultUsers = [{
+                    id: 1,
+                    name: 'Admin User',
+                    email: 'admin@example.com',
+                    password: btoa('admin123'),
+                    createdAt: new Date().toISOString()
+                }];
+                localStorage.setItem(USER_DB_KEY, JSON.stringify(defaultUsers));
+            }
+        }
+
+        function openAuthModal() {
+            document.getElementById('authModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            initUserDB();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function showAuthForm(form) {
+            document.getElementById('signinForm').classList.remove('active');
+            document.getElementById('signupForm').classList.remove('active');
+            document.getElementById('forgotForm').classList.remove('active');
+            
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            
+            if (form === 'signin') {
+                document.getElementById('signinForm').classList.add('active');
+                document.querySelector('.toggle-btn:first-child').classList.add('active');
+            } else if (form === 'signup') {
+                document.getElementById('signupForm').classList.add('active');
+                document.querySelector('.toggle-btn:last-child').classList.add('active');
+            } else if (form === 'forgot') {
+                document.getElementById('forgotForm').classList.add('active');
+            }
+        }
+
+        function showForgotPassword() {
+            showAuthForm('forgot');
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash password-toggle';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye password-toggle';
+            }
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #4ecdc4;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 50px;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        // Handle Sign Up
+        function handleSignUp(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirmPassword').value;
+            const terms = document.getElementById('termsCheckbox').checked;
+            
+            if (!name || !email || !password) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                alert('Please enter a valid email');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+            
+            if (password !== confirm) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            if (!terms) {
+                alert('Please accept the Terms');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem(USER_DB_KEY) || '[]');
+            if (users.find(u => u.email === email)) {
+                alert('User already exists');
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: btoa(password),
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem(USER_DB_KEY, JSON.stringify(users));
+            
+            alert('Account created successfully! Please sign in.');
+            showAuthForm('signin');
+            
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            document.getElementById('signupConfirmPassword').value = '';
+            document.getElementById('termsCheckbox').checked = false;
+        }
+
+        // Handle Sign In
+        function handleSignIn(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('signinEmail').value.trim();
+            const password = document.getElementById('signinPassword').value;
+            const remember = document.getElementById('rememberMe').checked;
+            
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem(USER_DB_KEY) || '[]');
+            const user = users.find(u => u.email === email && u.password === btoa(password));
+            
+            if (!user) {
+                alert('Invalid email or password');
+                return;
+            }
+            
+            const sessionData = {
+                userId: user.id,
+                name: user.name,
+                email: user.email,
+                loggedInAt: new Date().toISOString()
+            };
+            
+            if (remember) {
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(sessionData));
+            } else {
+                sessionStorage.setItem(CURRENT_USER_KEY, JSON.stringify(sessionData));
+            }
+            
+            showNotification(`Welcome back, ${user.name}!`);
+            closeAuthModal();
+            updateUIForLoggedInUser(user);
+            
+            document.getElementById('signinEmail').value = '';
+            document.getElementById('signinPassword').value = '';
+        }
+
+        // Handle Forgot Password
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('forgotEmail').value.trim();
+            if (!email || !isValidEmail(email)) {
+                alert('Please enter a valid email');
+                return;
+            }
+            alert(`Password reset link sent to ${email}`);
+            showAuthForm('signin');
+            document.getElementById('forgotEmail').value = '';
+        }
+
+        // Social Login
+        function socialLogin(provider) {
+            showNotification(`Signing in with ${provider}...`);
+            setTimeout(() => {
+                const sessionData = {
+                    userId: 'social_' + Date.now(),
+                    name: `${provider} User`,
+                    email: `user@${provider}.com`,
+                    provider: provider,
+                    loggedInAt: new Date().toISOString()
+                };
+                sessionStorage.setItem(CURRENT_USER_KEY, JSON.stringify(sessionData));
+                closeAuthModal();
+                updateUIForLoggedInUser(sessionData);
+            }, 1500);
+        }
+
+        // Update UI after login
+        function updateUIForLoggedInUser(user) {
+            const navMenu = document.getElementById('navMenu');
+            const contactBtn = navMenu.querySelector('.contact-btn');
+            
+            if (contactBtn) {
+                const userMenu = document.createElement('li');
+                userMenu.className = 'user-menu';
+                userMenu.innerHTML = `
+                    <div class="user-dropdown">
+                        <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="dropdown-content">
+                            <a href="#"><i class="fas fa-user"></i> Profile</a>
+                            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                `;
+                contactBtn.parentNode.replaceChild(userMenu, contactBtn);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+            sessionStorage.removeItem(CURRENT_USER_KEY);
+            window.location.reload();
+        }
+
+        function checkLoginStatus() {
+            const user = localStorage.getItem(CURRENT_USER_KEY) || sessionStorage.getItem(CURRENT_USER_KEY);
+            if (user) {
+                updateUIForLoggedInUser(JSON.parse(user));
+            }
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target == modal) {
+                closeAuthModal();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initUserDB();
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

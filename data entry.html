@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Data Entry - Donation Manager</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --dark: #2d4059;
+            --light: #f7fff7;
+            --gray: #6c757d;
+            --success: #6bffb8;
+            --danger: #ff8a8a;
+            --gradient1: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            --gradient2: linear-gradient(135deg, #4ecdc4 0%, #ffe66d 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e6f7f5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: var(--gradient1);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: var(--gradient1);
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            background: var(--gradient1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+        }
+
+        /* Storage Status Bar */
+        .storage-bar {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .storage-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray);
+        }
+
+        .storage-info i {
+            color: var(--secondary);
+        }
+
+        .storage-badge {
+            background: var(--gradient1);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        .clear-btn {
+            background: none;
+            border: 2px solid var(--danger);
+            color: var(--danger);
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .clear-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Entry Grid - Updated to single column since templates removed */
+        .entry-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Quick Entry Form - Made wider */
+        .quick-entry-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .quick-entry-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient1);
+        }
+
+        .quick-entry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .form-group label i {
+            color: var(--secondary);
+            margin-right: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            color: var(--gray);
+        }
+
+        .input-wrapper input,
+        .input-wrapper select {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper input:focus,
+        .input-wrapper select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+        }
+
+        .amount-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .currency-select {
+            width: 100px;
+        }
+
+        .currency-select select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .amount-field {
+            flex: 1;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-action-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .quick-action-btn:hover {
+            background: var(--gradient2);
+            border-color: transparent;
+            color: var(--dark);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient1);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Recent Entries */
+        .recent-entries {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .entries-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .badge {
+            background: var(--gradient1);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        .entries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .entry-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .entry-item:hover {
+            transform: translateX(5px);
+            border-left-color: var(--primary);
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .entry-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .entry-details {
+            flex: 1;
+        }
+
+        .entry-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .entry-meta {
+            font-size: 0.85rem;
+            color: var(--gray);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .entry-amount {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient1);
+            width: 0%;
+            transition: width 0.5s;
+        }
+
+        /* Info Card - Replacing templates section */
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .info-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .info-card ul {
+            list-style: none;
+        }
+
+        .info-card li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gray);
+        }
+
+        .info-card i {
+            color: var(--secondary);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .amount-row {
+                flex-direction: column;
+            }
+            
+            .currency-select {
+                width: 100%;
+            }
+            
+            .storage-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .quick-entry-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <div class="nav-bar">
+            <a href="homepage3.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="table3.html" class="nav-link"><i class="fas fa-table"></i> Tables</a>
+            <a href="calculations.html" class="nav-link"><i class="fas fa-table"></i> Calculations</a>
+            <a href="persistence3.html" class="nav-link"><i class="fas fa-database"></i> Persistence</a>
+            <a href="analytics1.html" class="nav-link"><i class="fas fa-chart-line"></i> Analytics</a>
+            <a href="data entry.html" class="nav-link active"><i class="fas fa-pen"></i> Easy Entry</a>
+            <a href="smartsearch.html" class="nav-link"><i class="fas fa-search"></i> Smart Search</a>
+        </div>
+
+        <h1><span class="highlight">Easy Data Entry</span></h1>
+        <p class="subtitle">Quick, intuitive form for lightning-fast donation recording</p>
+
+        <!-- Storage Status Bar -->
+        <div class="storage-bar">
+            <div class="storage-info">
+                <i class="fas fa-database"></i>
+                <span><strong>Persistent Storage</strong> - Your donations are saved automatically</span>
+            </div>
+            <div>
+                <span class="storage-badge" id="donationCount">0 donations</span>
+                <button class="clear-btn" onclick="clearAllDonations()">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+
+        <!-- Entry Grid - Single Column -->
+        <div class="entry-grid">
+            <!-- Quick Entry Form -->
+            <div class="quick-entry-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h2>Quick Entry</h2>
+                </div>
+
+                <form id="quickEntryForm">
+                    <!-- Donor Name -->
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> DONOR NAME</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="donorName" placeholder="e.g. John Smith" autocomplete="off" autofocus>
+                        </div>
+                    </div>
+
+                    <!-- Amount with Currency -->
+                    <div class="form-group">
+                        <label><i class="fas fa-coins"></i> AMOUNT</label>
+                        <div class="amount-row">
+                            <div class="currency-select">
+                                <select id="currency">
+                                    <option value="USD">$ USD</option>
+                                    <option value="INR">₹ INR</option>
+                                </select>
+                            </div>
+                            <div class="amount-field">
+                                <div class="input-wrapper">
+                                    <i class="fas fa-dollar-sign input-icon" id="currencyIcon">$</i>
+                                    <input type="number" id="amount" placeholder="Enter amount" min="0.01" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="form-group">
+                        <label><i class="fas fa-credit-card"></i> PAYMENT METHOD</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-credit-card input-icon"></i>
+                            <select id="paymentMethod">
+                                <option value="Credit Card">💳 Credit Card</option>
+                                <option value="Debit Card">💳 Debit Card</option>
+                                <option value="PayPal">🅿️ PayPal</option>
+                                <option value="Bank Transfer">🏦 Bank Transfer</option>
+                                <option value="UPI">📱 UPI</option>
+                                <option value="Google Pay">📱 Google Pay</option>
+                                <option value="PhonePe">📱 PhonePe</option>
+                                <option value="Cash">💵 Cash</option>
+                                <option value="Cheque">📝 Cheque</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions - Common Amounts -->
+                    <div class="quick-actions">
+                        <button type="button" class="quick-action-btn" onclick="setCommonAmount(100)">
+                            <i class="fas fa-coins"></i> $100
+                        </button>
+                        <button type="button" class="quick-action-btn" onclick="setCommonAmount(500)">
+                            <i class="fas fa-coins"></i> $500
+                        </button>
+                        <button type="button" class="quick-action-btn" onclick="setCommonAmount(1000)">
+                            <i class="fas fa-coins"></i> ₹1000
+                        </button>
+                        <button type="button" class="quick-action-btn" onclick="setCommonAmount(5000)">
+                            <i class="fas fa-coins"></i> ₹5000
+                        </button>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <i class="fas fa-save"></i> SAVE DONATION
+                        <span style="font-size: 0.8rem; opacity: 0.8;">(Auto-saved)</span>
+                    </button>
+
+                    <!-- Progress indicator -->
+                    <div class="progress-bar" id="formProgress">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                    </div>
+                    <p style="text-align: right; font-size: 0.85rem; color: var(--gray);">
+                        <span id="filledFields">0</span>/3 fields filled
+                    </p>
+                </form>
+
+                <!-- Info Card - Replaces templates -->
+                <div class="info-card">
+                    <h4>
+                        <i class="fas fa-info-circle" style="color: var(--secondary);"></i>
+                        Quick Tips
+                    </h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Data saves automatically to your browser</li>
+                        <li><i class="fas fa-check-circle"></i> Press Tab to move between fields</li>
+                        <li><i class="fas fa-check-circle"></i> Press Enter to submit the form</li>
+                        <li><i class="fas fa-check-circle"></i> Click amount buttons for quick entry</li>
+                        <li><i class="fas fa-check-circle"></i> All donations appear below instantly</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Entries -->
+        <div class="recent-entries">
+            <div class="entries-header">
+                <h2>
+                    <i class="fas fa-history" style="color: var(--secondary);"></i>
+                    Saved Donations
+                </h2>
+                <span class="badge" id="totalEntriesBadge">0 entries</span>
+            </div>
+
+            <div id="recentEntriesList" class="entries-grid">
+                <!-- Dynamically populated from localStorage -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Donation Class
+        class Donation {
+            constructor(id, name, amount, currency, method) {
+                this.id = id;
+                this.name = name;
+                this.amount = parseFloat(amount);
+                this.currency = currency;
+                this.method = method;
+                this.timestamp = new Date().toISOString();
+                this.date = new Date().toLocaleDateString();
+                this.time = new Date().toLocaleTimeString();
+            }
+
+            getFormattedAmount() {
+                const symbol = this.currency === 'INR' ? '₹' : '$';
+                return `${symbol}${this.amount.toFixed(2)}`;
+            }
+        }
+
+        // Storage Manager - Handles localStorage persistence
+        const StorageManager = {
+            STORAGE_KEY: 'donationManager_donations',
+            
+            getDonations: function() {
+                const stored = localStorage.getItem(this.STORAGE_KEY);
+                return stored ? JSON.parse(stored) : [];
+            },
+            
+            saveDonations: function(donations) {
+                localStorage.setItem(this.STORAGE_KEY, JSON.stringify(donations));
+                this.updateDisplay();
+            },
+            
+            addDonation: function(donation) {
+                const donations = this.getDonations();
+                donations.push(donation);
+                this.saveDonations(donations);
+                return donations;
+            },
+            
+            clearAll: function() {
+                if (confirm('Are you sure you want to delete ALL donations? This cannot be undone.')) {
+                    localStorage.removeItem(this.STORAGE_KEY);
+                    this.updateDisplay();
+                    showNotification('All donations cleared');
+                }
+            },
+            
+            updateDisplay: function() {
+                const donations = this.getDonations();
+                updateRecentEntries(donations);
+                updateDonationCount(donations.length);
+            },
+            
+            getNextId: function() {
+                const donations = this.getDonations();
+                return donations.length > 0 ? Math.max(...donations.map(d => d.id)) + 1 : 1;
+            }
+        };
+
+        // Form Progress Tracking
+        function updateFormProgress() {
+            const name = document.getElementById('donorName').value.trim();
+            const amount = document.getElementById('amount').value;
+            const method = document.getElementById('paymentMethod').value;
+            
+            let filled = 0;
+            if (name) filled++;
+            if (amount && amount > 0) filled++;
+            if (method) filled++;
+            
+            const percent = (filled / 3) * 100;
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('filledFields').textContent = filled;
+        }
+
+        // Update currency icon
+        document.getElementById('currency').addEventListener('change', function() {
+            const icon = document.getElementById('currencyIcon');
+            icon.textContent = this.value === 'INR' ? '₹' : '$';
+        });
+
+        // Track form field changes
+        document.getElementById('donorName').addEventListener('input', updateFormProgress);
+        document.getElementById('amount').addEventListener('input', updateFormProgress);
+        document.getElementById('paymentMethod').addEventListener('change', updateFormProgress);
+
+        // Set common amount
+        function setCommonAmount(amount) {
+            document.getElementById('amount').value = amount;
+            updateFormProgress();
+        }
+
+        // Form submission
+        document.getElementById('quickEntryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('donorName').value.trim();
+            const amount = document.getElementById('amount').value;
+            const currency = document.getElementById('currency').value;
+            const method = document.getElementById('paymentMethod').value;
+            
+            // Validation
+            if (!name) {
+                alert('Please enter donor name');
+                document.getElementById('donorName').focus();
+                return;
+            }
+            if (!amount || amount <= 0) {
+                alert('Please enter a valid amount');
+                document.getElementById('amount').focus();
+                return;
+            }
+            
+            // Create and save donation
+            const id = StorageManager.getNextId();
+            const donation = new Donation(id, name, amount, currency, method);
+            StorageManager.addDonation(donation);
+            
+            // Show success message
+            const symbol = currency === 'INR' ? '₹' : '$';
+            showNotification(`✅ Saved: ${name} donated ${symbol}${amount}`);
+            
+            // Clear form
+            document.getElementById('donorName').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('currency').value = 'USD';
+            document.getElementById('paymentMethod').value = 'Credit Card';
+            document.getElementById('currency').dispatchEvent(new Event('change'));
+            updateFormProgress();
+            
+            // Focus back on name field
+            document.getElementById('donorName').focus();
+        });
+
+        // Update recent entries display
+        function updateRecentEntries(donations) {
+            const recentList = document.getElementById('recentEntriesList');
+            const recent = [...donations].reverse().slice(0, 8); // Show more since we have space
+            
+            if (recent.length === 0) {
+                recentList.innerHTML = '<p style="color: var(--gray); text-align: center; grid-column: 1/-1; padding: 40px;"><i class="fas fa-heart" style="font-size: 3rem; opacity: 0.3;"></i><br>No donations yet. Add your first donation!</p>';
+                return;
+            }
+
+            let html = '';
+            recent.forEach(d => {
+                const initials = d.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2);
+                const donationDate = new Date(d.timestamp).toLocaleDateString();
+                const donationTime = new Date(d.timestamp).toLocaleTimeString();
+                
+                html += `
+                    <div class="entry-item">
+                        <div class="entry-avatar">
+                            ${initials}
+                        </div>
+                        <div class="entry-details">
+                            <div class="entry-name">${d.name}</div>
+                            <div class="entry-meta">
+                                <span><i class="far fa-clock"></i> ${donationTime}</span>
+                                <span><i class="fas fa-credit-card"></i> ${d.method}</span>
+                            </div>
+                        </div>
+                        <div class="entry-amount">${d.currency === 'INR' ? '₹' : '$'}${d.amount.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            recentList.innerHTML = html;
+        }
+
+        // Update donation count badge
+        function updateDonationCount(count) {
+            document.getElementById('donationCount').textContent = `${count} donation${count !== 1 ? 's' : ''}`;
+            document.getElementById('totalEntriesBadge').textContent = `${count} entr${count !== 1 ? 'ies' : 'y'}`;
+        }
+
+        // Clear all donations
+        function clearAllDonations() {
+            StorageManager.clearAll();
+        }
+
+        // Notification function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--success);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 50px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(400px); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(400px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize - Load donations from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const donations = StorageManager.getDonations();
+            updateRecentEntries(donations);
+            updateDonationCount(donations.length);
+            updateFormProgress();
+            document.getElementById('donorName').focus();
+        });
+
+        // Keyboard shortcut: Ctrl+Shift+C to clear all
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                clearAllDonations();
+            }
+        });
+    </script>
+</body>
+</html>
